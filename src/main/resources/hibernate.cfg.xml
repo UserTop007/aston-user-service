@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<!--
+    Корневой элемент конфигурации Hibernate.
+    Внутри session-factory — все настройки подключения и маппинга.
+-->
+<hibernate-configuration>
+
+    <session-factory>
+
+        <!-- ============================================================
+             1. ПОДКЛЮЧЕНИЕ К POSTGRESQL
+             ============================================================ -->
+
+        <!-- Драйвер JDBC. Это класс из библиотеки postgresql-42.7.3.jar,
+             которую мы подключили в pom.xml. Hibernate загрузит его,
+             чтобы общаться с БД. -->
+        <property name="hibernate.connection.driver_class">
+            org.postgresql.Driver
+        </property>
+
+        <!-- URL подключения.
+             jdbc:postgresql:// — протокол для PostgreSQL.
+             localhost        — сервер на этой же машине.
+             5432             — стандартный порт PostgreSQL.
+             user_service_db  — имя нашей БД (мы её создавали). -->
+        <property name="hibernate.connection.url">
+            jdbc:postgresql://localhost:5432/user_service_db
+        </property>
+
+        <!-- Логин пользователя БД. У нас — postgres (суперпользователь,
+             которого мы создали при установке). -->
+        <property name="hibernate.connection.username">
+            postgres
+        </property>
+
+        <!-- Пароль от пользователя postgres.-->
+        <property name="hibernate.connection.password">
+            user001
+        </property>
+
+        <!-- ============================================================
+             2. ДИАЛЕКТ SQL
+             ============================================================ -->
+
+        <!-- Диалект — это "язык", на котором Hibernate общается с БД.
+             PostgreSQLDialect говорит: "генерируй SQL под PostgreSQL".
+             Если поставить MySQL-диалект, Hibernate будет использовать
+             неподходящий синтаксис, и запросы упадут. -->
+        <property name="hibernate.dialect">
+            org.hibernate.dialect.PostgreSQLDialect
+        </property>
+
+        <!-- ============================================================
+             3. ОТЛАДКА
+             ============================================================ -->
+
+        <!-- Показывать в логах SQL-запросы, которые Hibernate отправляет.
+             true  — видно всё (удобно на разработке),
+             false — тихо (для продакшена). -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Форматировать SQL в логах (отступы, переносы строк).
+             Без этого всё в одну строку — читать больно. -->
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- ============================================================
+             4. РАБОТА СО СХЕМОЙ БД
+             ============================================================ -->
+
+        <!-- Что делать со схемой БД при старте приложения:
+
+             update   — если таблиц нет — создать; если есть — обновить
+                        (добавить колонки, которых не хватает). НЕ удаляет
+                        данные. Идеально для разработки.
+             create   — создать заново при каждом старте (ДАННЫЕ УДАЛЯЮТСЯ!).
+             create-drop — создать при старте и удалить при выходе.
+             validate — только проверить, что схема соответствует сущностям;
+                        упасть, если что-то не так.
+             none     — ничего не делать.
+
+             Для домашки — update. -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- ============================================================
+             5. МАППИНГ СУЩНОСТЕЙ
+             ============================================================ -->
+
+        <!-- Список классов-сущностей, которые Hibernate должен знать.
+             Каждому классу с @Entity — своя строка <mapping>.
+             Пока у нас одна сущность — User. -->
+        <mapping class="com.aston.userservice.entity.User"/>
+
+    </session-factory>
+
+</hibernate-configuration>
