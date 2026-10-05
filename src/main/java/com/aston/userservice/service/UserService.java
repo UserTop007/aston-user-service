@@ -1,14 +1,15 @@
 package com.aston.userservice.service;
 
 // Импорты: наш DAO, сущность, логгер и стандартные классы.
-import com.aston.userservice.dao.UserDao;
-import com.aston.userservice.dao.UserDaoImpl;
-import com.aston.userservice.entity.User;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Optional;
+import com.aston.userservice.dao.UserDao;
+import com.aston.userservice.dao.UserDaoImpl;
+import com.aston.userservice.entity.User;
 
 
 public class UserService {
@@ -17,10 +18,15 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserDao userDao;
-
+    
     // Конструктор: создаём стандартный DAO.
     public UserService() {
         this.userDao = new UserDaoImpl();
+    }
+
+    // Допоолнительный конструктор для тестов
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     // ===== CREATE =====
